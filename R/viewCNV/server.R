@@ -16,7 +16,7 @@ library(zoo)
 library(gridExtra)
 library(tidyr)
 
-load("config.R")
+source("config.R")
 
 # input <-
 #   structure(list(candidate = "DEL_P0563_29", seg.chr = 20L, seg.end = 36477348L, 
