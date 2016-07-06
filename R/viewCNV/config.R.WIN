@@ -9,5 +9,7 @@ profile.fn <- '/home/dkulp/mccarroll/gpc_wave2_batch1/profile_seq_20_100.dat.gz'
 
 data.dir <- "d:/mccarroll/cnv_seg.12.500"
 
+tmp.dir <- "C:\\cygwin\\tmp\\"
+
 input.dump.fn <- "d:/mccarroll/tmp/inputdump.R"
 

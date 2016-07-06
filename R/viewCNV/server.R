@@ -39,8 +39,13 @@ if (file.exists(log.fn)) {
 }
 pad <- 5000
 
-frags.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1'", shell, profile.fn), intern=T),"\t"))
-genoWin.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1'", shell, cnv.geno.fn), intern=T),"\t"))
+frags.cmd <- sprintf("%s 'zcat %s | head -1'", shell, profile.fn)
+cat(frags.cmd,"\n",file=stderr())
+frags.header <- unlist(strsplit(system(frags.cmd, intern=T),"\t"))
+
+genoWin.cmd <- sprintf("%s 'zcat %s | head -1'", shell, cnv.geno.fn)
+cat(genoWin.cmd,"\n",file=stderr())
+genoWin.header <- unlist(strsplit(system(genoWin.cmd, intern=T),"[\r\t]",perl=TRUE))
 
 # load simple CNV fragments as a starting point. These are extents with a consistent call in adjacent windows.
 load(cn.segs.merged.fn)
@@ -238,11 +243,14 @@ shinyServer(function(input, output, session) {
     # load windowed genotypes
     wg.fn <- basename(tempfile("wg"))
     tabix <- sprintf("tabix -h %s %s:%s-%s > /tmp/%s", cnv.geno.fn, input$seg.chr, input$seg.start-input$pad, input$seg.end+input$pad, wg.fn)
+    cat(tabix,file=stderr())
     system(sprintf("%s '%s'", shell, tabix))
-    wg <- read.table(sprintf("C:\\cygwin64\\tmp\\%s",wg.fn), header=FALSE, sep="\t", as.is=TRUE, check.names=FALSE)
+    wg <- read.table(sprintf("%s/%s",tmp.dir,wg.fn), header=FALSE, sep="\t", as.is=TRUE, check.names=FALSE)
+    unlink(wg.fn)
     colnames(wg) <- genoWin.header
     wg$cn <- as.factor(wg$cn)
     wg$pos <- wg$start + (wg$end - wg$start)/2
+print(head(wg))
     return(wg)
   })
   
@@ -250,8 +258,9 @@ shinyServer(function(input, output, session) {
     # load fragment data
     frag.fn <- basename(tempfile("cnv"))
     tabix <- sprintf("tabix -h %s %s:%s-%s > /tmp/%s", profile.fn, input$seg.chr, input$seg.start-input$pad, input$seg.end+input$pad, frag.fn)
+    cat(tabix,file=stderr())
     system(sprintf("%s '%s'", shell, tabix))
-    frags <- read.table(sprintf("C:\\cygwin64\\tmp\\%s",frag.fn), header=FALSE, sep="\t", as.is=TRUE, check.names=FALSE)
+    frags <- read.table(sprintf("%s/%s",tmp.dir,frag.fn), header=FALSE, sep="\t", as.is=TRUE, check.names=FALSE)
     colnames(frags) <- frags.header
     return(frags)
   })
