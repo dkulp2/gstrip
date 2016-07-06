@@ -39,8 +39,8 @@ if (file.exists(log.fn)) {
 }
 pad <- 5000
 
-frags.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1", shell, profile.fn), intern=T),"\t"))
-genoWin.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1", shell, cnv.geno.fn), intern=T),"\t"))
+frags.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1'", shell, profile.fn), intern=T),"\t"))
+genoWin.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1'", shell, cnv.geno.fn), intern=T),"\t"))
 
 # load simple CNV fragments as a starting point. These are extents with a consistent call in adjacent windows.
 load(cn.segs.merged.fn)
