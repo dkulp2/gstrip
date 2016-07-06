@@ -16,22 +16,13 @@ library(zoo)
 library(gridExtra)
 library(tidyr)
 
+load("config.R")
+
 # input <-
 #   structure(list(candidate = "DEL_P0563_29", seg.chr = 20L, seg.end = 36477348L, 
 #                  seg.start = 36474476L), .Names = c("candidate", "seg.chr", 
 #                                                     "seg.end", "seg.start"))
 
-shell <- "C:\\cygwin64\\bin\\bash.exe -lc"
-
-input.dump.fn <- "d:/mccarroll/tmp/inputdump.R"
-
-pad <- 5000
-extent.offset <- 12*100/2 # FIXME: outputs should set map positions centered in their windows
-#extent.offset <- 0
-profile.fn <- "d:/mccarroll/gpc_wave2_batch1/profile_seq_20_100.dat.gz"
-profile.fn <- '/home/dkulp/mccarroll/gpc_wave2_batch1/profile_seq_20_100.dat.gz'
-
-data.dir <- "d:/mccarroll/cnv_seg.12.500"
 irs.fn <- paste0(data.dir,"/cnv_segs.irs")
 gs_dels.fn <- paste0(data.dir,"/gs_dels.txt")
 probe.fn <- paste0(data.dir,"/probes.txt")
@@ -46,6 +37,7 @@ if (file.exists(log.fn)) {
 } else {
   notes <- data.frame()
 }
+pad <- 5000
 
 frags.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1", shell, profile.fn), intern=T),"\t"))
 genoWin.header <- unlist(strsplit(system(sprintf("%s 'zcat %s | head -1", shell, cnv.geno.fn), intern=T),"\t"))
